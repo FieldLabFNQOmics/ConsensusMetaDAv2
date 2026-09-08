@@ -24,8 +24,8 @@ required packages
 # if (!require("edgeR", quietly = TRUE)) BiocManager::install("edgeR")
 # if (!require("ADAPT", quietly = TRUE)) BiocManager::install("ADAPT")
 # if (!require("metagenomeSeq", quietly = TRUE)) BiocManager::install("metagenomeSeq")
-# if (!require("metagenomeSeq", quietly = TRUE)) BiocManager::install("MaAsLin3")
-# if (!require("metagenomeSeq", quietly = TRUE)) BiocManager::install("ANCOMBC")
+# if (!require("MaAsLin3", quietly = TRUE)) BiocManager::install("MaAsLin3")
+# if (!require("ANCOMBC", quietly = TRUE)) BiocManager::install("ANCOMBC")
 #
 # 
 # if (!require("ConsensusMetaDAv2", quietly = TRUE)) {
@@ -34,17 +34,7 @@ required packages
 # }
 
 =======
-# Install ggplot2 
-install.packages("ggplot2")
 
-# Install Bioconductor packages
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install("phyloseq")
-BiocManager::install("DESeq2")
-BiocManager::install("ALDEx2")
-BiocManager::install("edgeR")
 
 # Load the packages
 library(ggplot2)
@@ -56,6 +46,7 @@ library(metagenomeSeq)
 library(ADAPT)
 library(maaslin3)
 library(ANCOMBC)
+library(ConsensusMetaDAv2)
 
 ```
 
@@ -119,7 +110,7 @@ ecc_saliva_plots <- OTUs_plots(ecc_saliva_build_OTU_counts)
 To run ConsensusMetaDA, load the library and follow the examples in the vignette.
 
 ```R
-library(ConsensusMetaDA)
+library(ConsensusMetaDAv2)
 ```
 
 ## Contact

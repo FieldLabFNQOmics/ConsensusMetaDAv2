@@ -55,7 +55,7 @@ library(ConsensusMetaDAv2)
 
 To illustrate functionality of ```ConsensusMetaDAv2```, we will utilise microbiome biom format data from the ```ecc_saliva``` and annotation libraries as follows. Begin by installing and attaching data from these libraries as follows:
 
-Look at "./inst/doc/ConsensusMetaDAv2_Manual.html" for examples and manual.
+Look at "./inst/doc/ConsensusMetaDA_Manual.html" for examples and manual.
 
 ```R
 # load ConsensusMetaDAv2

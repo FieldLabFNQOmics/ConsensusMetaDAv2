@@ -115,4 +115,3 @@ library(ConsensusMetaDAv2)
 
 For more details, contact Manoharan Kumar:
 manoharan.kumar@jcu.edu.au
-# ConsensusMetaDAv2

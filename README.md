@@ -1,6 +1,6 @@
 # ConsensusMetaDAv2
 
-ConsensusMetaDAv2 is an R package for microbiome analysis using multiple algorithms - reaching consensus. No one tool perform best DA anlayes on metaganome data. Hence it needs a consensus approach to obtain more robust differential abundant microbiome. ConsensusMetaDAv2 helps achieve this using seven popularly used tools. ConsensusMetaDAv2 uses popular biom format and samples table as input to perform DA along with it generates standard microbiome visualisation plots such as Alpha Diversity, Beta Diversity, Rarefaction curve, Bidirectional plot and Scale plot at various taxa levels.
+ConsensusMetaDAv2 is an R package for microbiome analysis using multiple algorithms - reaching consensus. No one tool perform best DA anlayes on metaganome data. Hence it needs a consensus approach to obtain more robust differential abundant microbiome. ConsensusMetaDAv2 helps achieve this using seven popularly used tools. ConsensusMetaDAv2 uses popular phyloseq or biom format and samples table as input to perform DA along with it generates standard microbiome visualisation plots such as Alpha Diversity, Beta Diversity, Rarefaction curve, Bidirectional plot and Scale plot at various taxa levels.
 
 ## Installing consensusMetaDA
 

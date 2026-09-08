@@ -33,7 +33,6 @@ required packages
 #   remotes::install_github("FieldLabFNQOmics/ConsensusMetaDAv2")
 # }
 
-=======
 
 
 # Load the packages
@@ -101,7 +100,6 @@ Creates Five different plots and saves them as pdf files. (1) Alpha diversity - 
 
 ecc_saliva_plots <- OTUs_plots(ecc_saliva_build_OTU_counts)
 
-=======
 
 ```
 

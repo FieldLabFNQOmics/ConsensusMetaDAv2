@@ -30,7 +30,7 @@ sample_table_file <-  "./Data/samples_table_emp.txt"
 
 
 ## Load data to create phyloseq object
-emp <- build_OTU_counts_NoTaxa(biom = biome_file, sample_table = sample_table_file)
+emp <- build_OTU_counts(biom = biome_file, sample_table = sample_table_file)
 
 ## Plot using phyloseq object
 emp <- OTU_plots(emp)

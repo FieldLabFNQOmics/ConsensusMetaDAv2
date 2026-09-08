@@ -1,158 +1,223 @@
-##Load library
+suppressPackageStartupMessages({library(SparseDOSSA2); library(MASS)})
 
-library(sparseDOSSA)
+################ Stool template parameter ######
 
-setwd("./Manuscript_Figures/Data/")
-# Define the number of repetitions
-num_reps <- 100
+## ---- Parameters ------------------------------------------------------------
+sample_sizes <- c(100, 200)
+spike_props  <- c(0.05, 0.10, 0.25)
+n_feature    <- 500
+n_metadata   <- 2       # meta_1 binary (tested), meta_2 continuous (nuisance)
+eff_lo       <- 2.5
+eff_hi       <- 5.0
+depth        <- 50000
+nrep         <- 100
 
-#set.seed(123)  # Ensures different runs get different seeds but are still reproducible
-#seeds <- sample(1:10000, num_reps, replace = FALSE) 
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) >= 1) spike_props <- as.numeric(strsplit(args[1], ",")[[1]])
 
+## ---- Helpers ---------------------------------------------------------------
+make_metadata <- function(n_sample, n_metadata) {
+  M <- MASS::mvrnorm(n_sample, rep(0, n_metadata), diag(n_metadata))
+  nb <- floor(n_metadata / 2)
+  M[, seq_len(nb)] <- as.numeric(M[, seq_len(nb)] > 0)
+  dimnames(M) <- list(paste0("Sample", seq_len(n_sample)),
+                      paste0("meta_", seq_len(n_metadata)))
+  M
+}
 
-################### Looping #########
+## All spikes forced onto meta_1 so the truth-set size is CONSTANT across
+## replicates. Random assignment made it swing widely, which would confound
+## the sweep with truth-set-size noise.
+# old
+# make_spike <- function(n_feature, perc, lo, hi) {
+#   k <- round(n_feature * perc)
+#   f <- sample(paste0("Feature", seq_len(n_feature)), k)
+#   do.call(rbind, lapply(f, function(ft) {
+#     data.frame(metadata_datum = 1L,
+#                feature_spiked = ft,
+#                associated_property = c("abundance", "prevalence"),
+#                effect_size = runif(2, lo, hi),
+#                stringsAsFactors = FALSE)
+#   }))
+# }
 
-# Define parameter ranges
-spike <- c(10)
-dpercent <- c("0.05", "0.10", "0.15","0.25","0.50","1")
+make_spike <- function(n_feature, perc, lo, hi, frac_pos = 0.5) {
+  k <- round(n_feature * perc)
+  f <- sample(paste0("Feature", seq_len(n_feature)), k)
+  signs <- ifelse(runif(k) < frac_pos, 1, -1)          # per-feature direction
+  do.call(rbind, Map(function(ft, s) {
+    data.frame(metadata_datum = 1L,
+               feature_spiked = ft,
+               associated_property = c("abundance", "prevalence"),
+               effect_size = s * runif(2, lo, hi),      # signed magnitude
+               stringsAsFactors = FALSE)
+  }, f, signs))
+}
 
-# Loop through each spike strength
-for (s in spike) {
-  # Loop through each percent spiked
-  for (p in dpercent) {
-    # Loop through each repetition
-    for (i in 1:num_reps) {
-      # Define folder name with spike and percent parameters
-      main_folder <- paste0("./Manuscript_Figures/spike", s, "_percent", p)
-      rep_folder <- paste0(main_folder, "/reps", i)
-      
-      # Create directories if they do not exist
-      if (!dir.exists(main_folder)) {
-        dir.create(main_folder, recursive = TRUE)
-      }
-      if (!dir.exists(rep_folder)) {
-        dir.create(rep_folder, recursive = TRUE)
-      }
-      
-      setwd(rep_folder)
-      
-      #### Simulation code ####
-      #?sparseDOSSA()
-      rep2 <- sparseDOSSA(
-        strNormalizedFileName = "rep2-Normalized.pcl",      # Output: Normalized abundance data
-        strCountFileName = "rep2-Counts.pcl",   # Output: Raw counts data
-        parameter_filename = "rep2-SyntheticMicrobiomeParameterFile.txt",  # Output: Simulation parameters
-        # bugs_to_spike = 0,     # Introduce 10 spiked-in differentially abundant features
-        datasetCount = 1,       # Generate one dataset
-        read_depth = 20000,     # Read depth per sample
-        number_features = 500,  # Number of microbial species (OTUs)
-        number_samples = 100,    # Number of samples to simulate
-        percent_spiked = as.numeric(p),  # Use percent from loop
-        minLevelPercent = 0.5,
-        spikeStrength = as.character(s),  # Use spike strength from loop
-        seed = i,             # Set a seed for reproducibility
-        number_metadata = 1,
-        verbose = TRUE,          # Enable logging
-        noZeroInflate =  TRUE
-      )
-      
-      #?sparseDOSSA()
-      
-      #SampleID
-      
-      rep2$OTU_count[[1]][1] <- "SampleID"
-      
-      rep2$OTU_count[[1]][c(1,4),]
-      
-      rep2$OTU_count[[1]][c(1,6:1505),]
-      
-      write.table(t(rep2$OTU_count[[1]][c(1,4),]), "sample_table.txt", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
-      
-      #metadata <- read.table("samples_data.txt", sep = "\t", header = TRUE) # Simulated groups
-      #rownames(metadata) <- metadata$SampleID
-      
-      write.table(rep2$OTU_count[[1]][c(1,6:1505),], "simulation_counts_data.txt", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
-      
-      
-      
-      # Read the normalized abundance data
-      synthetic_data <- read.table("simulation_counts_data.txt", header = TRUE, sep = "\t")
-      
-      row.names(synthetic_data) <- synthetic_data$SampleID
-      
-      synthetic_data <- synthetic_data[, -1]
-      
-      # View the first few rows
-      head(synthetic_data)
-      
-      #rep1$OTU_count
-      metadata <- read.table("temp_sample_table.txt", sep = "\t", header = TRUE) # Simulated groups
-      
-      row.names(metadata) <- metadata$SampleID
-      metadata$Group <- metadata$Metadata3
-      
-      
-      write.table(metadata, "sample_table.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
-      
-      identical(colnames(synthetic_data), rownames(metadata))
-      
-      # Print progress
-      cat("Completed: spike =", s, ", percent =", p, ", rep =", i, "\n")
-    }
+run_one <- function(seed, n_sample, perc, outdir) {
+  set.seed(seed)
+  meta <- make_metadata(n_sample, n_metadata)
+  sp   <- make_spike(n_feature, perc, eff_lo, eff_hi)
+  
+  sim <- SparseDOSSA2(template = "Stool", n_sample = n_sample,
+                      new_features = TRUE, n_feature = n_feature,
+                      spike_metadata = sp, metadata_matrix = meta,
+                      median_read_depth = depth, verbose = FALSE)
+  
+  dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+  cnt   <- sim$simulated_data
+  truth <- unique(sp$feature_spiked)
+  
+  write.table(cnt,  file.path(outdir, "abundance.tsv"), sep = "\t",
+              quote = FALSE, col.names = NA)
+  write.table(meta, file.path(outdir, "metadata.tsv"),  sep = "\t",
+              quote = FALSE, col.names = NA)
+  writeLines(truth, file.path(outdir, "truth_features.txt"))
+  write.table(sp, file.path(outdir, "truth_full.tsv"), sep = "\t",
+              quote = FALSE, row.names = FALSE)
+  
+  c(n_samp = ncol(cnt), n_feat = nrow(cnt),
+    n_true = length(truth), sparsity = round(mean(cnt == 0), 3))
+}
+
+## ---- Generate --------------------------------------------------------------
+rows <- list()
+
+for (pp in spike_props) {
+  for (ns in sample_sizes) {
+    
+    cell <- file.path("sim_data", sprintf("n%d", ns), sprintf("spike%.2f", pp))
+    cat(sprintf("\n=== %s ===\n", cell))
+    st <- Sys.time()
+    
+    res <- t(sapply(seq_len(nrep), function(i)
+      run_one(seed   = ns * 10000 + round(pp * 100) * 10 + i,
+              n_sample = ns, perc = pp,
+              outdir = file.path(cell, paste0("Replicate_", i)))))
+    
+    print(res)
+    cat(sprintf("  %.1f min\n",
+                as.numeric(difftime(Sys.time(), st, units = "mins"))))
+    
+    rows[[length(rows)+1]] <- data.frame(
+      n_sample = ns, spike = pp,
+      n_true = mean(res[, "n_true"]),
+      sd_true = sd(res[, "n_true"]),
+      sparsity = round(mean(res[, "sparsity"]), 3))
   }
 }
 
-######################## Simulation data to biom and DA analyses ##############
+cat("\n===== SUMMARY =====\n")
+print(do.call(rbind, rows), row.names = FALSE)
+cat("\nCheck: n_true should be exactly 20 / 100 / 150 / 200 for\n",
+    "spike 0.05 / 0.10 / 0.25, with sd_true = 0 everywhere.\n")
 
-##Load libraries
+################# IBD template ######
 
-library(ggplot2)
-library(phyloseq)
-library(DESeq2)
-library(ALDEx2)
-library(edgeR)
-library(metagenomeSeq)
-library(ADAPT)
-library(dplyr)
-library(tibble)
-library(vegan)
-library(ggplot2)
-library(ConsensusMetaDA)
 
-setwd(paste0("./Manuscript_Figures/Data/spike", s, "_percent", p, "/reps", i, "/"))
+## ---- Parameters ------------------------------------------------------------
+sample_sizes <- c(100, 200)
+spike_props  <- c(0.05, 0.10, 0.25, 0.50)
+n_feature    <- 2000
+n_metadata   <- 2       # meta_1 binary (tested), meta_2 continuous (nuisance)
+eff_lo       <- 2.5
+eff_hi       <- 5.0
+depth        <- 50000
+nrep         <- 100
 
-num_reps <- 100
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) >= 1) spike_props <- as.numeric(strsplit(args[1], ",")[[1]])
 
-# Define parameter ranges
-#spike <- c(1,2,3,4,5,10)
+## ---- Helpers ---------------------------------------------------------------
+make_metadata <- function(n_sample, n_metadata) {
+  M <- MASS::mvrnorm(n_sample, rep(0, n_metadata), diag(n_metadata))
+  nb <- floor(n_metadata / 2)
+  M[, seq_len(nb)] <- as.numeric(M[, seq_len(nb)] > 0)
+  dimnames(M) <- list(paste0("Sample", seq_len(n_sample)),
+                      paste0("meta_", seq_len(n_metadata)))
+  M
+}
 
-spike <- c(10)
+## All spikes forced onto meta_1 so the truth-set size is CONSTANT across
+## replicates. Random assignment made it swing widely, which would confound
+## the sweep with truth-set-size noise.
+# old
+# make_spike <- function(n_feature, perc, lo, hi) {
+#   k <- round(n_feature * perc)
+#   f <- sample(paste0("Feature", seq_len(n_feature)), k)
+#   do.call(rbind, lapply(f, function(ft) {
+#     data.frame(metadata_datum = 1L,
+#                feature_spiked = ft,
+#                associated_property = c("abundance", "prevalence"),
+#                effect_size = runif(2, lo, hi),
+#                stringsAsFactors = FALSE)
+#   }))
+# }
 
-#Decimal Percentage
+make_spike <- function(n_feature, perc, lo, hi, frac_pos = 0.5) {
+  k <- round(n_feature * perc)
+  f <- sample(paste0("Feature", seq_len(n_feature)), k)
+  signs <- ifelse(runif(k) < frac_pos, 1, -1)          # per-feature direction
+  do.call(rbind, Map(function(ft, s) {
+    data.frame(metadata_datum = 1L,
+               feature_spiked = ft,
+               associated_property = c("abundance", "prevalence"),
+               effect_size = s * runif(2, lo, hi),      # signed magnitude
+               stringsAsFactors = FALSE)
+  }, f, signs))
+}
+run_one <- function(seed, n_sample, perc, outdir) {
+  set.seed(seed)
+  meta <- make_metadata(n_sample, n_metadata)
+  sp   <- make_spike(n_feature, perc, eff_lo, eff_hi)
+  
+  sim <- SparseDOSSA2(template = "IBD", n_sample = n_sample,
+                      new_features = TRUE, n_feature = n_feature,
+                      spike_metadata = sp, metadata_matrix = meta,
+                      median_read_depth = depth, verbose = FALSE)
+  
+  dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+  cnt   <- sim$simulated_data
+  truth <- unique(sp$feature_spiked)
+  
+  write.table(cnt,  file.path(outdir, "abundance.tsv"), sep = "\t",
+              quote = FALSE, col.names = NA)
+  write.table(meta, file.path(outdir, "metadata.tsv"),  sep = "\t",
+              quote = FALSE, col.names = NA)
+  writeLines(truth, file.path(outdir, "truth_features.txt"))
+  write.table(sp, file.path(outdir, "truth_full.tsv"), sep = "\t",
+              quote = FALSE, row.names = FALSE)
+  
+  c(n_samp = ncol(cnt), n_feat = nrow(cnt),
+    n_true = length(truth), sparsity = round(mean(cnt == 0), 3))
+}
 
-dpercent <- c("0.05", "0.10", "0.15","0.25","0.50","1")
+## ---- Generate --------------------------------------------------------------
+rows <- list()
 
-# Loop through each spike strength
-for (s in spike) {
-  # Loop through each percent spiked
-  for (p in dpercent) {
-    # Loop through each repetition
-    for (i in 1:num_reps) {
-      
-      setwd(paste0("./Manuscript_Figures/Data/spike", s, "_percent", p, "/reps", i, "/"))
-      
-      system("module load python3/3.10.4")
-      
-      system("~/.local/bin/biom convert -i simulation_counts_data.txt   -o simulation_counts_data.biom --table-type='OTU table' --to-json")
-      
-      sample_t1 <- "sample_table2.txt"
-      
-      test_biom <- "./simulation_counts_data.biom"
-      
-      sim_Rep_build <- build_OTU_counts(test_biom, sample_t1)
-      
-      OTUs_multi_DA(sim_Rep_build)
-    }
+for (pp in spike_props) {
+  for (ns in sample_sizes) {
+    
+    cell <- file.path("sim_data", sprintf("n%d", ns), sprintf("spike%.2f", pp))
+    cat(sprintf("\n=== %s ===\n", cell))
+    st <- Sys.time()
+    
+    res <- t(sapply(seq_len(nrep), function(i)
+      run_one(seed   = ns * 10000 + round(pp * 100) * 10 + i,
+              n_sample = ns, perc = pp,
+              outdir = file.path(cell, paste0("Replicate_", i)))))
+    
+    print(res)
+    cat(sprintf("  %.1f min\n",
+                as.numeric(difftime(Sys.time(), st, units = "mins"))))
+    
+    rows[[length(rows)+1]] <- data.frame(
+      n_sample = ns, spike = pp,
+      n_true = mean(res[, "n_true"]),
+      sd_true = sd(res[, "n_true"]),
+      sparsity = round(mean(res[, "sparsity"]), 3))
   }
 }
 
+cat("\n===== SUMMARY =====\n")
+print(do.call(rbind, rows), row.names = FALSE)

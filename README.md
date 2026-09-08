@@ -55,7 +55,7 @@ library(ConsensusMetaDAv2)
 
 To illustrate functionality of ```ConsensusMetaDAv2```, we will utilise microbiome biom format data from the ```ecc_saliva``` and annotation libraries as follows. Begin by installing and attaching data from these libraries as follows:
 
-Look at "./inst/doc/ConsensusMetaDA_Manual.html" for examples and manual.
+Look at "./vignettes/ConsensusMetaDA_Manual.html" for examples and manual.
 
 ```R
 # load ConsensusMetaDAv2
@@ -81,15 +81,15 @@ ecc_saliva_sample_table <- "../inst//extdata/ecc_saliva_sample_table.txt"
 ecc_saliva_tax <- tax_mat
 
 ## build
-ecc_saliva_build_OTU_counts <- build_OTU_counts(ecc_saliva_biom, 
-                                                 ecc_saliva_sample_table, 
-                                                 ecc_saliva_tax, 
-                                                 abundance_threshold = 10, 
-                                                 prevalence_threshold = 0.1, 
-                                                 rarity_threshold = 0, 
-                                                 variance_threshold = 0 
+ecc_saliva_build_OTU_counts <- build_OTU_counts(
+  biom                 = ecc_saliva_biom,
+  sample_table         = ecc_saliva_sample_table,
+  tax_tables           = ecc_saliva_tax,
+  abundance_threshold  = 10,
+  prevalence_threshold = 0.1,
+  rarity_threshold     = 0,
+  variance_threshold   = 0
 )
-
 ecc_saliva_build_OTU_counts
 
 ## Perform DA

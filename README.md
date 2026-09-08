@@ -7,7 +7,7 @@ ConsensusMetaDAv2 is an R package for microbiome analysis using multiple algorit
 MetaConsensusDA is an R package for microbiome analysis using multiple algorithms - reaching consensus.
 
 
-To obtain the original version from github, install devtools in R and use the following:
+To obtain the original version from github, install devtools or remotes in R and use the following:
 
 ```R
 

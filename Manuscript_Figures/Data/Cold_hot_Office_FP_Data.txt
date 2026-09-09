@@ -1,141 +1,166 @@
-Group	Tools	Tools_Values
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	ADAPT	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	metagenomeSeq	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	ALDEx2	0
-Office	EdgeR	10
-Office	EdgeR	11
-Office	EdgeR	11
-Office	EdgeR	10
-Office	EdgeR	11
-Office	EdgeR	10
-Office	EdgeR	11
-Office	EdgeR	10
-Office	EdgeR	11
-Office	EdgeR	10
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	DESeq2	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Intersect	0
-Office	FiveTools_Union	10
-Office	FiveTools_Union	11
-Office	FiveTools_Union	11
-Office	FiveTools_Union	10
-Office	FiveTools_Union	11
-Office	FiveTools_Union	10
-Office	FiveTools_Union	11
-Office	FiveTools_Union	10
-Office	FiveTools_Union	11
-Office	FiveTools_Union	10
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	ADAPT	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	metagenomeSeq	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	ALDEx2	0
-Cold_Hot	EdgeR	4
-Cold_Hot	EdgeR	3
-Cold_Hot	EdgeR	6
-Cold_Hot	EdgeR	4
-Cold_Hot	EdgeR	5
-Cold_Hot	EdgeR	5
-Cold_Hot	EdgeR	4
-Cold_Hot	EdgeR	5
-Cold_Hot	EdgeR	4
-Cold_Hot	EdgeR	5
-Cold_Hot	DESeq2	0
-Cold_Hot	DESeq2	0
-Cold_Hot	DESeq2	1
-Cold_Hot	DESeq2	0
-Cold_Hot	DESeq2	1
-Cold_Hot	DESeq2	1
-Cold_Hot	DESeq2	0
-Cold_Hot	DESeq2	0
-Cold_Hot	DESeq2	0
-Cold_Hot	DESeq2	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Intersect	0
-Cold_Hot	FiveTools_Union	4
-Cold_Hot	FiveTools_Union	4
-Cold_Hot	FiveTools_Union	7
-Cold_Hot	FiveTools_Union	4
-Cold_Hot	FiveTools_Union	6
-Cold_Hot	FiveTools_Union	6
-Cold_Hot	FiveTools_Union	5
-Cold_Hot	FiveTools_Union	5
-Cold_Hot	FiveTools_Union	5
-Cold_Hot	FiveTools_Union	6
+Dataset	Replicate	Method	Value
+Office	Replicate_1	ADAPT	0.00
+Office	Replicate_10	ADAPT	0.00
+Office	Replicate_2	ADAPT	0.00
+Office	Replicate_3	ADAPT	0.00
+Office	Replicate_4	ADAPT	0.00
+Office	Replicate_5	ADAPT	0.02
+Office	Replicate_6	ADAPT	0.00
+Office	Replicate_7	ADAPT	0.00
+Office	Replicate_8	ADAPT	0.00
+Office	Replicate_9	ADAPT	0.00
+Office	Replicate_1	aldex	0.00
+Office	Replicate_10	aldex	0.00
+Office	Replicate_2	aldex	0.00
+Office	Replicate_3	aldex	0.00
+Office	Replicate_4	aldex	0.00
+Office	Replicate_5	aldex	0.00
+Office	Replicate_6	aldex	0.00
+Office	Replicate_7	aldex	0.00
+Office	Replicate_8	aldex	0.00
+Office	Replicate_9	aldex	0.00
+Office	Replicate_1	ANCOMBC2	3.45
+Office	Replicate_10	ANCOMBC2	2.98
+Office	Replicate_2	ANCOMBC2	3.40
+Office	Replicate_3	ANCOMBC2	3.17
+Office	Replicate_4	ANCOMBC2	3.36
+Office	Replicate_5	ANCOMBC2	3.64
+Office	Replicate_6	ANCOMBC2	3.45
+Office	Replicate_7	ANCOMBC2	3.78
+Office	Replicate_8	ANCOMBC2	3.81
+Office	Replicate_9	ANCOMBC2	3.92
+Office	Replicate_1	DESeq	0.00
+Office	Replicate_10	DESeq	0.00
+Office	Replicate_2	DESeq	0.00
+Office	Replicate_3	DESeq	0.00
+Office	Replicate_4	DESeq	0.00
+Office	Replicate_5	DESeq	0.02
+Office	Replicate_6	DESeq	0.00
+Office	Replicate_7	DESeq	0.00
+Office	Replicate_8	DESeq	0.00
+Office	Replicate_9	DESeq	0.00
+Office	Replicate_1	edgeR	11.04
+Office	Replicate_10	edgeR	10.02
+Office	Replicate_2	edgeR	10.54
+Office	Replicate_3	edgeR	10.40
+Office	Replicate_4	edgeR	10.87
+Office	Replicate_5	edgeR	10.23
+Office	Replicate_6	edgeR	10.66
+Office	Replicate_7	edgeR	10.38
+Office	Replicate_8	edgeR	10.97
+Office	Replicate_9	edgeR	10.19
+Office	Replicate_1	MaAsLin3	0.00
+Office	Replicate_10	MaAsLin3	0.00
+Office	Replicate_2	MaAsLin3	0.00
+Office	Replicate_3	MaAsLin3	0.02
+Office	Replicate_4	MaAsLin3	0.00
+Office	Replicate_5	MaAsLin3	0.00
+Office	Replicate_6	MaAsLin3	0.00
+Office	Replicate_7	MaAsLin3	0.00
+Office	Replicate_8	MaAsLin3	0.00
+Office	Replicate_9	MaAsLin3	0.00
+Office	Replicate_1	metagenomeSeq	0.00
+Office	Replicate_10	metagenomeSeq	0.00
+Office	Replicate_2	metagenomeSeq	0.00
+Office	Replicate_3	metagenomeSeq	0.00
+Office	Replicate_4	metagenomeSeq	0.00
+Office	Replicate_5	metagenomeSeq	0.00
+Office	Replicate_6	metagenomeSeq	0.00
+Office	Replicate_7	metagenomeSeq	0.00
+Office	Replicate_8	metagenomeSeq	0.00
+Office	Replicate_9	metagenomeSeq	0.00
+Office	Replicate_10	SevenTool_Intersect	0.00
+Office	Replicate_1	SevenTool_Intersect	0.00
+Office	Replicate_2	SevenTool_Intersect	0.00
+Office	Replicate_3	SevenTool_Intersect	0.00
+Office	Replicate_4	SevenTool_Intersect	0.00
+Office	Replicate_5	SevenTool_Intersect	0.00
+Office	Replicate_6	SevenTool_Intersect	0.00
+Office	Replicate_7	SevenTool_Intersect	0.00
+Office	Replicate_8	SevenTool_Intersect	0.00
+Office	Replicate_9	SevenTool_Intersect	0.00
+Office	Replicate_10	SevenTool_Union	9.24
+Office	Replicate_1	SevenTool_Union	12.57
+Office	Replicate_2	SevenTool_Union	12.10
+Office	Replicate_3	SevenTool_Union	9.62
+Office	Replicate_4	SevenTool_Union	12.36
+Office	Replicate_5	SevenTool_Union	12.27
+Office	Replicate_6	SevenTool_Union	12.10
+Office	Replicate_7	SevenTool_Union	12.03
+Office	Replicate_8	SevenTool_Union	12.72
+Office	Replicate_9	SevenTool_Union	12.24
+HOT_COLD	Replicat_10	ADAPT	0
+HOT_COLD	Replicat_1	ADAPT	0
+HOT_COLD	Replicat_3	ADAPT	0
+HOT_COLD	Replicat_4	ADAPT	0
+HOT_COLD	Replicat_5	ADAPT	0
+HOT_COLD	Replicat_6	ADAPT	0
+HOT_COLD	Replicat_7	ADAPT	0
+HOT_COLD	Replicat_8	ADAPT	0
+HOT_COLD	Replicat_9	ADAPT	0
+HOT_COLD	Replicat_10	aldex	0
+HOT_COLD	Replicat_4	aldex	0
+HOT_COLD	Replicat_5	aldex	0
+HOT_COLD	Replicat_6	aldex	0
+HOT_COLD	Replicat_7	aldex	0
+HOT_COLD	Replicat_8	aldex	0
+HOT_COLD	Replicat_9	aldex	0
+HOT_COLD	Replicat_1	aldex	0
+HOT_COLD	Replicat_3	aldex	0
+HOT_COLD	Replicat_10	ANCOMBC2	7.839127471
+HOT_COLD	Replicat_1	ANCOMBC2	7.952738014
+HOT_COLD	Replicat_3	ANCOMBC2	7.452851625
+HOT_COLD	Replicat_7	ANCOMBC2	10.06589411
+HOT_COLD	Replicat_8	ANCOMBC2	8.748011815
+HOT_COLD	Replicat_9	ANCOMBC2	10.58850261
+HOT_COLD	Replicat_10	DESeq	0.318109521
+HOT_COLD	Replicat_4	DESeq	0.613496933
+HOT_COLD	Replicat_5	DESeq	0.636219041
+HOT_COLD	Replicat_6	DESeq	0.204498978
+HOT_COLD	Replicat_7	DESeq	0.136332652
+HOT_COLD	Replicat_8	DESeq	0.318109521
+HOT_COLD	Replicat_9	DESeq	0.386275846
+HOT_COLD	Replicat_1	DESeq	0.386275846
+HOT_COLD	Replicat_3	DESeq	0.522608498
+HOT_COLD	Replicat_10	edgeR	4.08997955
+HOT_COLD	Replicat_1	edgeR	4.158145876
+HOT_COLD	Replicat_3	edgeR	3.703703704
+HOT_COLD	Replicat_4	edgeR	4.90797546
+HOT_COLD	Replicat_5	edgeR	5.248807089
+HOT_COLD	Replicat_6	edgeR	4.362644853
+HOT_COLD	Replicat_7	edgeR	4.794364917
+HOT_COLD	Replicat_8	edgeR	4.294478528
+HOT_COLD	Replicat_9	edgeR	5.362417632
+HOT_COLD	Replicat_10	MaAsLin3	0
+HOT_COLD	Replicat_1	MaAsLin3	0
+HOT_COLD	Replicat_3	MaAsLin3	0
+HOT_COLD	Replicat_7	MaAsLin3	0
+HOT_COLD	Replicat_8	MaAsLin3	0
+HOT_COLD	Replicat_9	MaAsLin3	0
+HOT_COLD	Replicat_10	metagenomeSeq	0
+HOT_COLD	Replicat_4	metagenomeSeq	0
+HOT_COLD	Replicat_5	metagenomeSeq	0
+HOT_COLD	Replicat_6	metagenomeSeq	0
+HOT_COLD	Replicat_7	metagenomeSeq	0
+HOT_COLD	Replicat_8	metagenomeSeq	0
+HOT_COLD	Replicat_9	metagenomeSeq	0
+HOT_COLD	Replicat_1	metagenomeSeq	0
+HOT_COLD	Replicat_3	metagenomeSeq	0
+HOT_COLD	Replicat_10	SevenTool_Intersect	0
+HOT_COLD	Replicat_1	SevenTool_Intersect	0
+HOT_COLD	Replicat_3	SevenTool_Intersect	0
+HOT_COLD	Replicat_4	SevenTool_Intersect	0
+HOT_COLD	Replicat_5	SevenTool_Intersect	0
+HOT_COLD	Replicat_6	SevenTool_Intersect	0
+HOT_COLD	Replicat_7	SevenTool_Intersect	0
+HOT_COLD	Replicat_8	SevenTool_Intersect	0
+HOT_COLD	Replicat_9	SevenTool_Intersect	0
+HOT_COLD	Replicat_10	SevenTool_Union	9.202453988
+HOT_COLD	Replicat_1	SevenTool_Union	12.06543967
+HOT_COLD	Replicat_3	SevenTool_Union	11.27016587
+HOT_COLD	Replicat_4	SevenTool_Union	4.476255397
+HOT_COLD	Replicat_5	SevenTool_Union	5.06703022
+HOT_COLD	Replicat_6	SevenTool_Union	4.158145876
+HOT_COLD	Replicat_7	SevenTool_Union	11.15655533
+HOT_COLD	Replicat_8	SevenTool_Union	9.975005681
+HOT_COLD	Replicat_9	SevenTool_Union	11.54283117

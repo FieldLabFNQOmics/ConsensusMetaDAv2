@@ -103,14 +103,6 @@ ecc_saliva_plots <- OTUs_plots(ecc_saliva_build_OTU_counts)
 
 ```
 
-## Examples
-
-To run ConsensusMetaDA, load the library and follow the examples in the vignette.
-
-```R
-library(ConsensusMetaDAv2)
-```
-
 ## Contact
 
 For more details, contact Manoharan Kumar:

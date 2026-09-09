@@ -4,8 +4,6 @@ suppressPackageStartupMessages({
   library(tidyr)
 })
 
-setwd("./benchmark_out/n100/spike/")
-
 infile <- "../Data/Fig4_Data.txt"     # <- your per-replicate data file
 
 df <- read.delim(infile, header = TRUE, stringsAsFactors = FALSE, check.names = FALSE)

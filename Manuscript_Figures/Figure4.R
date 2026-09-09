@@ -1,117 +1,136 @@
-############### Figure 4a ##################
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(tidyr)
+})
 
-# Load the packages
-library(ggplot2)
+setwd("./benchmark_out/n100/spike/")
 
-############### Number of significant DAs from each tools #########
-cold_hot_Office <-  read.table(file = "./Data/Cold_hot_Office_FP_Data.txt", sep = "\t", header = TRUE)
+infile <- "../Data/Fig4_Data.txt"     # <- your per-replicate data file
 
-cold_hot_Office$Tools
-cold_hot_Office$Tools_Values
+df <- read.delim(infile, header = TRUE, stringsAsFactors = FALSE, check.names = FALSE)
+stopifnot(all(c("replicate","tool","empirical_FDR","recall") %in% names(df)))
+df$empirical_FDR <- as.numeric(df$empirical_FDR)
+df$recall        <- as.numeric(df$recall)
 
-fig4a <- ggplot(cold_hot_Office, aes(x = Tools_Values, y = Tools, color = Tools, fill = Tools)) +
-  geom_dotplot(binwidth = 2, stackdir = "center", dotsize = 0.7) +  # Set binwidth
-  scale_color_manual(values = c("forestgreen", "firebrick", "gold", "purple", "darkorange", 
-                                "dodgerblue",  "cyan", 
-                                "magenta", "black")) +
-  scale_fill_manual(values = c("forestgreen", "firebrick", "gold", "purple", "darkorange", 
-                               "dodgerblue",  "cyan", 
-                               "magenta", "black")) +
-  scale_x_continuous(limits = c(-10, 50)) +
-  theme(
-    panel.background = element_blank(),  # Remove background
-    panel.grid.major = element_blank(),  # Remove major gridlines
-    panel.grid.minor = element_blank(),  # Remove minor gridlines
-    text = element_text(size = 14, colour = "black", face = "bold"),
-    axis.line = element_line(color = "black")  # Black x and y axis lines
-  ) +
-  labs(
-    title = "False Positive Analyses",
-    x = "Percentage of Significant after multiple test corrections",
-    y = "Consensus Tools"
-  ) +
-  facet_grid(~ Group)
+nominal <- 0.05
 
-fig4a
+## ---- 2. classify each row: individual tool vs consensus vote rule ----------
+individual_tools <- c("edgeR","DESeq2","ALDEx2","metaSeq","ADAPT","ANCOMBC2","MaAsLin3")
 
-ggsave("fig4a.pdf",  fig4a = fig4a, width = 15, height = 10)
+classify <- function(tool) {
+  if (tool %in% individual_tools) return("Individual tool")
+  if (tool %in% c("Union","Intersect") || grepl("^Vote_", tool)) return("Consensus rule")
+  NA_character_
+}
+df$type <- vapply(df$tool, classify, character(1))
 
+## Harmonise vote labels across 6- and 7-tool replicates onto a common
+## consensus ordering. Map every consensus rule to its k-of-N fraction, then
+## to a shared display label on the 7-tool scale (nearest rung).
+consensus_frac <- function(tool) {
+  if (tool == "Union")     return(1/7)          # union = at least 1
+  if (tool == "Intersect") return(7/7)          # intersect = all
+  m <- regmatches(tool, regexec("^Vote_(\\d+)of(\\d+)$", tool))[[1]]
+  if (length(m) == 3) return(as.numeric(m[2]) / as.numeric(m[3]))
+  NA_real_
+}
+df$frac <- ifelse(df$type == "Consensus rule", vapply(df$tool, consensus_frac, numeric(1)), NA_real_)
 
-############### Figure 4b ##################
+## shared consensus display label (order from Union at top to Intersect)
+frac_to_label <- function(f) {
+  if (is.na(f)) return(NA_character_)
+  # nearest k on a 7 scale
+  k <- round(f * 7)
+  if (k <= 1) return("Union (1 of 7)")
+  if (k >= 7) return("Intersect (7 of 7)")
+  sprintf("%d of 7", k)
+}
+df$consensus_label <- vapply(df$frac, frac_to_label, character(1))
 
+## unified label used on the y-axis of panels b/c: tool name for individual,
+## consensus_label for consensus rules
+df$label <- ifelse(df$type == "Individual tool", df$tool, df$consensus_label)
 
-############### Number of significant DAs from each tools output of simulation data #########
+## ---- 3. per-label summary across replicates --------------------------------
+summ <- df %>%
+  group_by(type, label) %>%
+  summarise(
+    mean_FDR    = mean(empirical_FDR, na.rm = TRUE),
+    sd_FDR      = sd(empirical_FDR,   na.rm = TRUE),
+    mean_recall = mean(recall,        na.rm = TRUE),
+    sd_recall   = sd(recall,          na.rm = TRUE),
+    pct_controlled = 100 * mean(empirical_FDR <= nominal, na.rm = TRUE),
+    n_rep       = dplyr::n(),
+    .groups = "drop"
+  ) %>%
+  mutate(sd_FDR = ifelse(is.na(sd_FDR), 0, sd_FDR),
+         sd_recall = ifelse(is.na(sd_recall), 0, sd_recall))
 
-spike10_simulation <-  read.table(file = "./Data/spike10_simulation_TP_Data.txt", sep = "\t", header = TRUE)
+## y-axis order: consensus rules Union->Intersect, then individual tools
+consensus_order <- c("Union (1 of 7)","2 of 7","3 of 7","4 of 7","5 of 7","6 of 7","Intersect (7 of 7)")
+tool_order      <- individual_tools
+lvl <- c(rev(tool_order), rev(consensus_order))   # bottom -> top for ggplot
+summ$label <- factor(summ$label, levels = lvl)
 
+## colours: orange = consensus, blue = individual (matching your reference)
+cols <- c("Consensus rule" = "#E8890C", "Individual tool" = "#2b7fff")
 
-# Define group-specific max values and x-axis limits
-group_specs <- data.frame(
-  Group = unique(spike10_simulation$Group),  # Adjust to match your group names
-  max_value = c(40, 60, 90, 140, 270, 500)
-  #  x_limit = c(45, 65, 95, 145, 275, 505)  # Slightly higher than max for better visualization
-)
+## ---- panel a: FDR vs power trade-off ---------------------------------------
+pa <- ggplot(summ, aes(mean_FDR, mean_recall, colour = type)) +
+  geom_vline(xintercept = nominal, linetype = "dotted", colour = "grey50") +
+  geom_path(data = dplyr::filter(summ, type == "Consensus rule") %>%
+              dplyr::arrange(match(label, rev(lvl))),
+            aes(group = 1), colour = "#E8890C", linewidth = 0.4, alpha = 0.6) +
+  geom_point(size = 2) +
+  ggrepel::geom_text_repel(aes(label = label), size = 2.6, max.overlaps = Inf,
+                           show.legend = FALSE) +
+  scale_colour_manual(values = cols, name = NULL) +
+  labs(x = "Empirical FDR (nominal 0.05)", y = "Power (recall)",
+       title = "a  FDR / power trade-off",
+       subtitle = "orange = consensus rules in vote order; blue = individual tools") +
+  theme_bw(base_size = 10) +
+  theme(panel.grid.minor = element_blank(), legend.position = "none")
 
-unique(spike10_simulation$Group)
+## ---- panel b: FDR control at nominal q < 0.05 ------------------------------
+pb <- ggplot(summ, aes(mean_FDR, label, colour = type)) +
+  geom_vline(xintercept = nominal, linetype = "dotted", colour = "grey50") +
+  geom_errorbarh(aes(xmin = pmax(0, mean_FDR - sd_FDR), xmax = mean_FDR + sd_FDR),
+                 height = 0.3, linewidth = 0.4) +
+  geom_point(size = 2) +
+  scale_colour_manual(values = cols, name = NULL) +
+  labs(x = "Empirical FDR (mean +/- SD)", y = NULL,
+       title = "b  FDR control at nominal q < 0.05") +
+  theme_bw(base_size = 10) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        legend.position = "bottom")
 
-# Define dotted lines for each group based on their scale
-group_dotted_lines <- data.frame(
-  Group = rep(unique(spike10_simulation$Group), times = c(1, 1, 1, 1, 1, 1)),  # Different number of lines per group
-  line_pos = c(
-    # Group 1 (max 40): lines at 10, 25, 40
-    25,
-    # Group 2 (max 60): lines at 15, 30, 50
-    50,
-    # Group 3 (max 90): lines at 25, 50, 75
-    75,
-    # Group 4 (max 140): lines at 25, 50, 75, 125
-    125,
-    # Group 5 (max 270): lines at 50, 100, 150, 200, 250
-    250,
-    # Group 6 (max 500): lines at 100, 200, 300, 400, 500
-    500
-  )
-)
+## ---- panel c: reliability of control ---------------------------------------
+pc <- ggplot(summ, aes(pct_controlled, label, colour = type)) +
+  geom_vline(xintercept = 95, linetype = "dotted", colour = "grey50") +
+  geom_point(size = 2) +
+  scale_colour_manual(values = cols, name = NULL) +
+  scale_x_continuous(limits = c(0, 100)) +
+  labs(x = "% of replicates with FDR <= nominal", y = NULL,
+       title = "c  Reliability of control",
+       subtitle = "dotted line = 95% of replicates") +
+  theme_bw(base_size = 10) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        legend.position = "bottom")
 
-fig4b <- ggplot(spike10_simulation, aes(x = Tools_Values, y = Tools, color = Tools, fill = Tools)) +
-  # Add dotted vertical lines (different per group)
-  geom_vline(data = group_dotted_lines, aes(xintercept = line_pos), 
-             linetype = "dotted", color = "navyblue", size = 0.8) +
+## ---- assemble --------------------------------------------------------------
+if (requireNamespace("patchwork", quietly = TRUE)) {
+  library(patchwork)
+  fig <- pa / (pb | pc) + patchwork::plot_layout(heights = c(1, 1))
+  ggsave("FDR_summary_figure.pdf", fig, width = 10, height = 10, device = cairo_pdf)
+} else {
+  ggsave("FDR_summary_a.pdf", pa, width = 7, height = 5, device = cairo_pdf)
+}
+
+write.table(summ, "FDR_summary_table.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
+message("wrote FDR_summary_figure.pdf and FDR_summary_table.tsv")
+print(summ)
+
   
-  # Add max value vertical lines
-  # geom_vline(data = group_specs, aes(xintercept = max_value), 
-  #           linetype = "dashed", color = "red", size = 1.2) +
-  
-  geom_boxplot() +
-  
-  
-  scale_color_manual(values = c("forestgreen", "firebrick", "gold", "purple", "darkorange", 
-                                "dodgerblue", "cyan", 
-                                "magenta", "black")) +
-  scale_fill_manual(values = c("forestgreen", "firebrick", "gold", "purple", "darkorange", 
-                               "dodgerblue",  "cyan", 
-                               "magenta", "black")) +
-  
-  # No global scale_x_continuous - let each facet scale independently
-  theme(
-    panel.background = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "black"),
-    text = element_text(size = 14, colour = "black", face = "bold"),
-    strip.text = element_text(size = 12, face = "bold")
-  ) +
-  labs(
-    title = "True Positive Analyses",
-    x = "Significant FDR counts out of 500",
-    y = "Consensus Tools"
-  ) +
-  # Key change: scales = "free_x" allows different x-axis scales per group
-  facet_grid(~ Group, scales = "free_x")
-
-fig4b
-
-ggsave("fig4b.pdf",  plot = fig4b, width = 15, height = 10)
-
-
-

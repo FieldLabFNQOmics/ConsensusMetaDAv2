@@ -1,6 +1,6 @@
-# ConsensusMetaDAv2
+# ConsensusMetaDA
 
-ConsensusMetaDAv2 is an R package for microbiome analysis using multiple algorithms - reaching consensus. No one tool perform best DA anlayes on metaganome data. Hence it needs a consensus approach to obtain more robust differential abundant microbiome. ConsensusMetaDAv2 helps achieve this using seven popularly used tools. ConsensusMetaDAv2 uses popular phyloseq or biom format and samples table as input to perform DA along with it generates standard microbiome visualisation plots such as Alpha Diversity, Beta Diversity, Rarefaction curve, Bidirectional plot and Scale plot at various taxa levels.
+ConsensusMetaDA is an R package for microbiome analysis using multiple algorithms - reaching consensus. No one tool perform best DA anlayes on metaganome data. Hence it needs a consensus approach to obtain more robust differential abundant microbiome. ConsensusMetaDA helps achieve this using seven popularly used tools. ConsensusMetaDA uses popular phyloseq or biom format and samples table as input to perform DA along with it generates standard microbiome visualisation plots such as Alpha Diversity, Beta Diversity, Rarefaction curve, Bidirectional plot and Scale plot at various taxa levels.
 
 ## Installing consensusMetaDA
 
@@ -28,9 +28,9 @@ required packages
 # if (!require("ANCOMBC", quietly = TRUE)) BiocManager::install("ANCOMBC")
 #
 # 
-# if (!require("ConsensusMetaDAv2", quietly = TRUE)) {
+# if (!require("ConsensusMetaDA", quietly = TRUE)) {
 #   if (!require("remotes", quietly = TRUE)) install.packages("remotes")
-#   remotes::install_github("FieldLabFNQOmics/ConsensusMetaDAv2")
+#   remotes::install_github("FieldLabFNQOmics/ConsensusMetaDA")
 # }
 
 
@@ -45,21 +45,21 @@ library(metagenomeSeq)
 library(ADAPT)
 library(maaslin3)
 library(ANCOMBC)
-library(ConsensusMetaDAv2)
+library(ConsensusMetaDA)
 
 ```
 
 
-# ConsensusMetaDAv2 examples
+# ConsensusMetaDA examples
 
-To illustrate functionality of ```ConsensusMetaDAv2```, we will utilise microbiome biom format data from the ```ecc_saliva``` and annotation libraries as follows. Begin by installing and attaching data from these libraries as follows:
+To illustrate functionality of ```ConsensusMetaDA```, we will utilise microbiome biom format data from the ```ecc_saliva``` and annotation libraries as follows. Begin by installing and attaching data from these libraries as follows:
 
 Look at "./vignettes/ConsensusMetaDA_Manual.html" for examples and manual.
 
 ```R
-# load ConsensusMetaDAv2
+# load ConsensusMetaDA
 
-library(ConsensusMetaDAv2)
+library(ConsensusMetaDA)
 
 library(ADAPT)
 
@@ -69,9 +69,9 @@ otu_mat <- as(otu_table(ecc_saliva), "matrix")
 sample_df <- as(sample_data(ecc_saliva), "data.frame")
 tax_mat <- as(tax_table(ecc_saliva), "matrix")
 
-# ConsensusMetaDAv2 examples
+# ConsensusMetaDA examples
 
-To illustrate functionality of ```ConsensusMetaDAv2```, we will utilise microbiome biom format data from the ```ecc_saliva``` and annotation libraries as follows. Begin by installing and attaching data from these libraries as follows:
+To illustrate functionality of ```ConsensusMetaDA```, we will utilise microbiome biom format data from the ```ecc_saliva``` and annotation libraries as follows. Begin by installing and attaching data from these libraries as follows:
 
 ecc_saliva_biom <- "../inst//extdata/ecc_saliva_Otu.biom"
 
